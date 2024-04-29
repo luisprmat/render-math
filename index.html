@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Render Math</title>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+        },
+      };
+    </script>
+    <script
+      type="text/javascript"
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script type="module" crossorigin src="/assets/index-CEP2Dv3q.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CS-Mpowb.css">
+  </head>
+  <body class="bg-gray-50 dark:bg-slate-900">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex gap-4 my-12 items-center justify-center">
+        <a
+          href="https://www.mathjax.org"
+          class="inline-block my-6"
+          target="_blank"
+        >
+          <img src="/assets/mathjax-BxpqpuVG.svg" alt="MathJax logo" class="h-10 w-10" />
+        </a>
+        <h1 class="text-2xl font-bold dark:text-gray-200">Math Render</h1>
+      </div>
+
+      <div
+        x-data="{
+          math: '',
+          typeset: (code) => {
+            let promise = Promise.resolve()
+            MathJax.statup.promise = MathJax.startup.promise
+              .then(() => MathJax.typesetPromise(code()))
+              .catch(e => console.log('Typeset failed: ' + e.message))
+            return promise;
+          }
+        }"
+        class="bg-white dark:bg-gray-950 p-6 rounded-sm shadow-md"
+      >
+        <p class="text-gray-700 dark:text-gray-400">
+          Escriba su expresión matemática
+        </p>
+        <textarea
+          x-model="math"
+          x-on:keyup="typeset(() => {
+            const mathjx = $refs.mathDiv
+            mathjx.innerHTML = math
+            return [mathjx]
+          })"
+          class="w-full border-gray-800 mt-2 rounded-md dark:bg-gray-900 dark:text-gray-200"
+          rows="8"
+        ></textarea>
+
+        <p class="text-gray-700 dark:text-gray-400">Previsualización</p>
+        <div
+          x-ref="mathDiv"
+          class="mt-4 p-4 w-full border border-gray-800 rounded-md dark:text-gray-400"
+        ></div>
+      </div>
+    </div>
+  </body>
+</html>
