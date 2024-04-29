@@ -5,6 +5,22 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Render Math</title>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+        },
+      };
+    </script>
+    <script
+      type="text/javascript"
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
   </head>
   <body class="bg-gray-50 dark:bg-slate-900">
     <div class="max-w-4xl mx-auto">
@@ -21,7 +37,14 @@
 
       <div
         x-data="{
-          math: ''
+          math: '',
+          typeset: (code) => {
+            let promise = Promise.resolve()
+            MathJax.statup.promise = MathJax.startup.promise
+              .then(() => MathJax.typesetPromise(code()))
+              .catch(e => console.log('Typeset failed: ' + e.message))
+            return promise;
+          }
         }"
         class="bg-white dark:bg-gray-950 p-6 rounded-sm shadow-md"
       >
@@ -30,13 +53,18 @@
         </p>
         <textarea
           x-model="math"
+          x-on:keyup="typeset(() => {
+            const mathjx = $refs.mathDiv
+            mathjx.innerHTML = math
+            return [mathjx]
+          })"
           class="w-full border-gray-800 mt-2 rounded-md dark:bg-gray-900 dark:text-gray-200"
           rows="8"
         ></textarea>
 
         <p class="text-gray-700 dark:text-gray-400">Previsualización</p>
         <div
-          x-html="math"
+          x-ref="mathDiv"
           class="mt-4 p-4 w-full border border-gray-800 rounded-md dark:text-gray-400"
         ></div>
       </div>
