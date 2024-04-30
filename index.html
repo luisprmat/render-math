@@ -40,7 +40,7 @@
           math: '',
           typeset: (code) => {
             let promise = Promise.resolve()
-            MathJax.statup.promise = MathJax.startup.promise
+            promise = promise
               .then(() => MathJax.typesetPromise(code()))
               .catch(e => console.log('Typeset failed: ' + e.message))
             return promise;
@@ -53,7 +53,7 @@
         </p>
         <textarea
           x-model="math"
-          x-on:keyup="typeset(() => {
+          x-on:keyup="await typeset(() => {
             const mathjx = $refs.mathDiv
             mathjx.innerHTML = math
             return [mathjx]
